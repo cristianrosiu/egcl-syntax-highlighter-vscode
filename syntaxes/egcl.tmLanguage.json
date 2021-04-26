@@ -1,0 +1,131 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "EGCL Programming Language",
+	"scopeName": "source.egcl",
+	
+	"patterns": [
+		{
+			"include": "#comment"
+		},
+		{
+			"match":"\\b(bool|int|real|var)\\b",
+			"name":"storage.type.egcl"
+		},
+		{
+			"include": "#declarations"
+		},
+		{
+			"include": "#script-top-level"
+		}
+	],
+	"repository": {
+
+		"declarations":{
+			"patterns": [
+				{
+					"include": "#type-declarations"
+				}
+			]
+		},
+		"script-top-level":{
+			"patterns": [
+				{
+					"include": "#method-declaration"
+				},
+				{
+					"include": "#statement"
+				}
+			]
+		},
+		"type-declaration":{
+			"patterns":[
+				{
+					"include": "#comment"
+				},
+				{
+					"include": "#storage-modifier"
+				}
+			]
+		},
+		"statement": {
+			"patterns": [
+				{
+					"include": "#comment"
+				},
+				{
+					"include": "#keywords"
+				},
+				{
+					"include": "#expression"
+				}
+			]
+		},
+		"keywords": {
+			"patterns": [
+				{
+					"name": "keyword.control.egcl",
+					"match": "\\b(do|od|if|fi|else|skip|return|call|div)\\b"
+				},
+				{
+					"name": "keyword.control.egcl",
+					"match": "\\[\\]"
+				}
+			]
+		},
+		"expression": {
+			"patterns": [
+				{
+					"include": "#comment"
+				},
+				{
+					"include": "#constants"
+				}
+			]
+		},
+		"method-declaration": {
+			"begin": "\\b(proc|fn)\\b",
+			"beginCaptures": {
+				"0": {
+					"name":"storage.type.egcl"
+				}
+			},
+			"end": "\\(",
+			"patterns": [
+				{
+					"match": ".",
+					"name": "entity.name.function.egcl"
+				}
+			]
+		},
+		"comment": {
+			"patterns": [{
+				"name": "comment.control.egcl",
+				"match": "#.*"
+			}]
+		},
+		"identifier":{
+			"patterns": [
+				{
+					"name": "variable.name.egcl"
+				}
+			]
+		},
+		"constants": {
+			"patterns": [
+				{
+					"name": "constant.numeric.float.egcl",
+					"match": "\\b-?[0-9][0-9_]*((\\.([0-9][0-9_]*([eE][+-]??[0-9][0-9_]*)?)?)|([eE][+-]??[0-9][0-9_]*))"
+				},
+				{
+					"name": "constant.numeric.integer.nativeint.egcl",
+					"match": "\\b(-?((0(x|X)[0-9a-fA-F][0-9a-fA-F_]*)|(0(o|O)[0-7][0-7_]*)|(0(b|B)[01][01_]*)|([0-9][0-9_]*)))"
+				},
+				{
+					"name": "constant.other.egcl",
+					"match": "\\b(true|false|null|unit|void)\\b"
+				}
+			]
+		}
+	}
+
+}

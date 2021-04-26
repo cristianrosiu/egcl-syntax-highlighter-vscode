@@ -1,0 +1,25 @@
+{
+    "name": "egcl",
+    "displayName": "EGCL",
+    "description": "EGCL Programming Language",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.55.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "egcl",
+            "aliases": ["EGCL Programming Language", "egcl"],
+            "extensions": [".egcl"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "egcl",
+            "scopeName": "source.egcl",
+            "path": "./syntaxes/egcl.tmLanguage.json"
+        }]
+    }
+}

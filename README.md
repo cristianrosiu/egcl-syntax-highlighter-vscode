@@ -1,6 +1,6 @@
 # EGCL Syntax Highlighter README
 
-This syntax highlighter was created for the **Extended Guarded Command Programming** Language that I have worked on as a university project. To **install** it just create a new folder inside `.vscode/extensions` (Linux) or `AppData\Local\Programs\Microsoft VS Code\resources\app\extensions` (Windows), and copy paste the contents of this repository into it.
+This syntax highlighter was created for the **Extended Guarded Command Programming** Language that I have worked on. To **install** it just create a new folder inside `.vscode/extensions` (Linux) or `AppData\Local\Programs\Microsoft VS Code\resources\app\extensions` (Windows), and copy paste the contents of this repository into it.
 
 ## Features
 

@@ -1,0 +1,134 @@
+schema: https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json
+name: EGCL Programming Language
+scopeName: source.egcl
+patterns:
+  - include: "#comments"
+  - include: "#program"
+repository:
+  program:
+    patterns:
+      - include: "#comments"
+      - include: "#method-declaration"
+  method-declaration:
+    begin: (?<type>\bproc|fn\b)\s+(?<name>([a-z][a-zA-Z0-9_?]*)|'_')\s*\(
+    beginCaptures:
+      "1":
+        name: storage.type.egcl
+      "2":
+        name: storage.type.egcl
+      "3":
+        name: entity.name.function.egcl
+    end: \]\|
+    patterns:
+      - include: "#program"
+      - include: "#types"
+      - include: "#variable"
+      - include: "#block"
+  block:
+    begin: \|\[
+    end: \]\|
+    patterns:
+      - include: "#comments"
+      - include: "#statements"
+  statements:
+    patterns:
+      - include: "#control-statements"
+      - include: "#guarded-statement"
+      - include: "#procedure-call"
+      - include: "#declaration"
+      - include: "#assignment"
+      - include: "#block"
+      - include: "#expression-statement"
+  guarded-statement:
+    begin: \b(do|if)\b
+    beginCaptures:
+      "0":
+        name: keyword.control.egcl
+    end: \b(od|fi)\b
+    endCaptures:
+      "0":
+        name: keyword.control.egcl
+    patterns:
+      - include: "#statements"
+      - match: \[\]
+        name: keyword.control.egcl
+  procedure-call:
+    patterns:
+      - match: \b(call)\b\s+(?<name>([a-z]([a-zA-Z0-9_?])*)|'_')
+        captures:
+          "0":
+            name: entity.name.function.egcl
+          "1":
+            name: keyword.control.egcl
+  function-call:
+    patterns:
+      - match: (?<name>([a-z]([a-zA-Z0-9_?])*)|'_')\s*(?<open>\()
+        captures:
+          "2":
+            name: entity.name.function.egcl
+  control-statements:
+    patterns:
+      - match: \b(return|skip|else)\b
+        name: keyword.control.egcl
+      - match: \b(div|mod)\b
+        name: keyword.operator.egcl
+  expression-statement:
+    patterns:
+      - include: "#function-call"
+      - include: "#tuple-access"
+      - include: "#array-access"
+      - include: "#int-const"
+      - include: "#real-const"
+      - include: "#bool-const"
+  declaration:
+    begin: \b(var)\b
+    beginCaptures:
+      "0":
+        name: storage.type.egcl
+    end: \;|\]\|
+    patterns:
+      - include: "#types"
+      - include: "#expression-statement"
+  array-access:
+    begin: (?<name>([a-z]([a-zA-Z0-9_?])*)|'_')\[
+    beginCaptures:
+      "1":
+        name: variable.parameter.egcl
+    end: \]
+    patterns:
+      - include: "#statements"
+  tuple-access:
+    begin: (?<name>([a-z]([a-zA-Z0-9_?])*)|'_')\{
+    beginCaptures:
+      "1":
+        name: variable.parameter.egcl
+    end: \}
+    patterns:
+      - include: "#statements"
+  variable:
+    patterns:
+      - include: "#identifier"
+  int-const:
+    patterns:
+      - match: "[+-]?[0-9]+"
+        name: constant.numeric.integer.egcl
+  real-const:
+    patterns:
+      - match: ([+-]?[0-9]+)(\.([0-9]+))?([eE]([+-]?[0-9]+))?
+        name: constant.numeric.float.egcl
+  bool-const:
+    patterns:
+      - match: \b(true|false)\b
+        name: constant.other.egcl
+  identifier:
+    patterns:
+      - match: ([a-z]([a-zA-Z0-9_?])*)|'_'
+        name: variable.parameter.egcl
+  comments:
+    patterns:
+      - name: comment.control.egcl
+        match: "#.*"
+  types:
+    patterns:
+      - match: \b(int|real|bool)\b
+        name: storage.type.egcl

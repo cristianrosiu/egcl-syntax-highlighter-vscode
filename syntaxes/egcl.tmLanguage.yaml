@@ -9,6 +9,8 @@ repository:
     patterns:
       - include: "#comments"
       - include: "#method-declaration"
+      - include: "#block"
+      - include: "#program"
   method-declaration:
     begin: (?<type>\bproc|fn\b)\s+(?<name>([a-z][a-zA-Z0-9_?]*)|'_')\s*\(
     beginCaptures:
@@ -18,12 +20,10 @@ repository:
         name: storage.type.egcl
       "3":
         name: entity.name.function.egcl
-    end: \]\|
+    end: \)
     patterns:
-      - include: "#program"
       - include: "#types"
       - include: "#variable"
-      - include: "#block"
   block:
     begin: \|\[
     end: \]\|
@@ -33,11 +33,33 @@ repository:
   statements:
     patterns:
       - include: "#control-statements"
-      - include: "#guarded-statement"
       - include: "#procedure-call"
       - include: "#declaration"
-      - include: "#assignment"
+      - include: "#guarded-statement"
       - include: "#block"
+      - include: "#expression-statement"
+  control-statements:
+    patterns:
+      - match: \b(return|skip|else)\b
+        name: keyword.control.egcl
+      - match: \b(div|mod)\b
+        name: keyword.operator.egcl
+  procedure-call:
+    patterns:
+      - match: \b(call)\b\s+(?<name>([a-z]([a-zA-Z0-9_?])*)|'_')
+        captures:
+          "0":
+            name: entity.name.function.egcl
+          "1":
+            name: keyword.control.egcl
+  declaration:
+    begin: \b(var)\b
+    beginCaptures:
+      "0":
+        name: storage.type.egcl
+    end: \;|\]\|
+    patterns:
+      - include: "#types"
       - include: "#expression-statement"
   guarded-statement:
     begin: \b(do|if)\b
@@ -52,43 +74,18 @@ repository:
       - include: "#statements"
       - match: \[\]
         name: keyword.control.egcl
-  procedure-call:
+  expression-statement:
     patterns:
-      - match: \b(call)\b\s+(?<name>([a-z]([a-zA-Z0-9_?])*)|'_')
-        captures:
-          "0":
-            name: entity.name.function.egcl
-          "1":
-            name: keyword.control.egcl
+      - include: "#function-call"
+      - include: "#array-access"
+      - include: "#tuple-access"
+      - include: "#constants"
   function-call:
     patterns:
       - match: (?<name>([a-z]([a-zA-Z0-9_?])*)|'_')\s*(?<open>\()
         captures:
           "2":
             name: entity.name.function.egcl
-  control-statements:
-    patterns:
-      - match: \b(return|skip|else)\b
-        name: keyword.control.egcl
-      - match: \b(div|mod)\b
-        name: keyword.operator.egcl
-  expression-statement:
-    patterns:
-      - include: "#function-call"
-      - include: "#tuple-access"
-      - include: "#array-access"
-      - include: "#int-const"
-      - include: "#real-const"
-      - include: "#bool-const"
-  declaration:
-    begin: \b(var)\b
-    beginCaptures:
-      "0":
-        name: storage.type.egcl
-    end: \;|\]\|
-    patterns:
-      - include: "#types"
-      - include: "#expression-statement"
   array-access:
     begin: (?<name>([a-z]([a-zA-Z0-9_?])*)|'_')\[
     beginCaptures:
@@ -108,6 +105,11 @@ repository:
   variable:
     patterns:
       - include: "#identifier"
+  constants:
+    patterns:
+      - include: "#int-const"
+      - include: "#real-const"
+      - include: "#bool-const"
   int-const:
     patterns:
       - match: "[+-]?[0-9]+"
